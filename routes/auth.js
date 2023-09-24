@@ -53,7 +53,6 @@ router.post('/createuser', [
 router.post('/login', [
     body('email', 'Enter valid email').isEmail(),
     body('password', 'Password cannot be blank').exists(),
-    body('type', 'Enter type of user').exists(),
 ], async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty) {
@@ -68,7 +67,7 @@ router.post('/login', [
         }
 
         const passComp = await bcrypt.compare(password, user.password)
-        if (!passComp && user.type !== type) {
+        if (!passComp) {
             return res.status(400).json({ success, error: "Please try to login with correct credentials" })
         }
 
